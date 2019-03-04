@@ -18,10 +18,11 @@ ggplot(data = countries, aes(x = continent, fill = continent, label = ..count..)
 
 geom_text
 
-ggplot(data = countries, aes(x = continent, fill = continent, label = ..count..)) +
+ggplot(data = countries, aes(x = continent, fill = continent, label = ..count..)) + # aes - mapowanie obiektów naszych danych do atrybutów wizualnych; label count dotyczy labelków, z których skorzysta potem ggtext
   geom_bar() +
-  geom_text(stat = "count")
+  geom_text(stat = "count") # stat dotyczy umiejscowienia napisu
 
+# poniższy sposób jest najbardziej zalecany, ze względu na dziedziczenie statystyk
 ggplot(data = countries, aes(x = continent, fill = continent)) +
   geom_bar() +
   geom_text(aes(label = ..count..), stat = "count")
