@@ -1,0 +1,30 @@
+---
+title: "Untitled"
+author: "Szymon Kowalik"
+date: "11 marca 2019"
+output: html_document
+---
+
+## Obrazek
+
+```{r,message=FALSE,warning=FALSE,error=FALSE,echo=FALSE}
+library(dplyr)
+library(SmarterPoland)
+library(ggplot2)
+ggplot(data = countries, aes(x = birth.rate, y = death.rate)) + 
+  geom_point()
+```
+
+## Tabelka
+
+```{r}
+knitr::kable(countries)
+```
+
+## Tabelka DT
+
+```{r}
+library(DT)
+datatable(countries)
+```
+
