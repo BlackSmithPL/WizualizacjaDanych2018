@@ -17,6 +17,7 @@ ui <- fluidPage(
     mainPanel(
       h2("Scatterplot"),
       plotOutput("countries_plot", height = 600, brush = "country_brush"),
+      textOutput("cointries_counter"),
       h2("Table"),
       tableOutput("countries_table")
     )
@@ -33,16 +34,8 @@ server <- function(input, output) {
     filter(countries, continent %in% input[["chosen_continent"]]) 
   })
   
-  output[["countries_plot"]] <- renderPlot({
-    p <- ggplot(countries_r(), aes(x = birth.rate, y = death.rate, color = continent)) +
-      geom_point() +
-      scale_color_manual(values = continent_colors[input[["chosen_continent"]]]) +
-      theme_bw()
+  filtered_countries <- reactive({
     
-    p
-  })
-  
-  output[["countries_table"]] <- renderTable({
     validate(
       need(input[["country_brush"]], "Select at least one country")
     )
@@ -53,6 +46,22 @@ server <- function(input, output) {
            death.rate < input[["country_brush"]][["ymax"]]) 
   })
   
+  output[["countries_plot"]] <- renderPlot({
+    p <- ggplot(countries_r(), aes(x = birth.rate, y = death.rate, color = continent)) +
+      geom_point() +
+      scale_color_manual(values = continent_colors[input[["chosen_continent"]]]) +
+      theme_bw()
+    
+    p
+  })
+  
+  output[["countries_table"]] <- renderTable({
+    filtered_countries()
+  })
+  
+  output[["cointries_counter"]] <- renderText({
+    paste("Selected", nrow(filtered_countries()), " countries")
+  })
 }
 
 shinyApp(ui = ui, server = server)
